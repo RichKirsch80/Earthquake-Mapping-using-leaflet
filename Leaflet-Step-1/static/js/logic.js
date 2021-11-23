@@ -8,19 +8,46 @@ d3.json(url).then(function(data) {
   createFeatures(data.features);
 });
 
+// function to determine circle color by depth
+function getColor(depth) {
+  switch(true)
+  {
+    case depth > 90:
+      return "#FF5733";
+    case depth > 70:
+      return "#DC7633";
+    case depth > 50:
+      return "orange";
+    case depth > 30:
+      return "yellow";
+    case depth > 10:
+      return "#7DCEA0";
+    default:
+      return "#D5F5E3"
+  }
+}
+
 function createFeatures(earthquakeData) {
 
   // Define a function we want to run once for each feature in the features array
-  // Give each feature a popup describing the place and time of the earthquake
+  // Give each feature a popup describing the place, Magnitude and depth of the earthquake
   function onEachFeature(feature, layer) {
     layer.bindPopup( "Location: " + feature.properties.place + "<br>" + "Depth: " + feature.geometry.coordinates[2] 
-    + "<br>" + "Magitude: " + feature.properties.mag + "</p>");
+    + "<br>" + "Magnitude: " + feature.properties.mag + "</p>");
    
   }
 
   // Create a GeoJSON layer containing the features array on the earthquakeData object
   // Run the onEachFeature function once for each piece of data in the array
   var earthquakes = L.geoJSON(earthquakeData, {
+    pointToLayer: function(feature, latlng) {
+      return new L.CircleMarker(latlng, {
+        radius: (feature.properties.mag*5),
+        color: getColor(feature.geometry.coordinates[2]),
+        fillcolor: getColor(feature.geometry.coordinates[2]),
+        fillOpacity: ".5"
+      });
+    },
     onEachFeature: onEachFeature
     });
 
@@ -53,34 +80,40 @@ function createMap(earthquakes) {
   // Create our map, giving it the streetmap and earthquakes layers to display on load
   var myMap = L.map("map", {
     center: [
-      37.09, -95.71
+      40.7128, -74.0059
     ],
-    zoom: 5,
+    zoom: 4,
     layers: [usmap, earthquakes]
 
   });
 // Set up the legend
-var legend = L.control({ position: "bottomright" });
+var legend = L.control({ 
+  position: "bottomright"
+ });
+
 legend.onAdd = function() {
-  var div = L.DomUtil.create("div", "info legend");
-  var limits = [0, 10];
-  var colors = [0, 10];
-  var labels = [];
+  var div = L.DomUtil.create("div", "Legend");
+  div.innerHTML = "<h3>Depth</h3>";
 
-  // Add min & max
-  var legendInfo = "<h1>Earthquake Depth</h1>" +
-    "<div class=\"labels\">" +
-      "<div class=\"min\">" + limits[0] + "</div>" +
-      "<div class=\"max\">" + limits[limits.length - 1] + "</div>" +
-    "</div>";
+  var depthList = [0, 10, 30, 50, 70, 90]
+  
+  // loop to set colors for each depth range
+  for (var i = 1; i < depthList.length; i++)
+  {
+    div.innerHTML += "<div>"
+                  + "<i style='background-color: " 
+                    + getColor(depthList[i] - 1)
+                    + ";'>&nbsp;</i>"
+                  + depthList[i -1] + " - " + depthList[i]
+                  + "</div>"
+  }
 
-  div.innerHTML = legendInfo;
-
-  limits.forEach(function(limit, index) {
-    labels.push("<li style=\"background-color: white" + "\"></li>");
-  });
-
-  div.innerHTML += "<ul>" + labels.join("") + "</ul>";
+  div.innerHTML += "<div>"
+                  + "<i style='background-color: " 
+                  + getColor(91)
+                  + ";'>&nbsp;</i>"
+                  + depthList[depthList.length - 1] + "+" 
+                  + "</div>"
   return div;
 };
 

@@ -8,3 +8,19 @@ body,
 html {
   height: 100%;
 }
+
+.Legend
+{
+  background-color: white;
+  width: 120px;
+  text-align: center;
+  
+}
+
+i
+{
+  display: inline-block;
+  width: 35px;
+  margin-left: 1px;
+  margin-right: 1px;
+}
