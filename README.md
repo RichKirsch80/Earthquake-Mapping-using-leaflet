@@ -9,4 +9,5 @@ Created a map using Leaflet that plots all of the earthquakes the data set based
 Each earthquake was marked by a circle that has their size reflected by their magnitude and their color based on depth.
 Each earthquake has a clickable popup to display their location, magnitude and depth.
 
-#assitance in creating getColor and legend formatting during TA homework session with Nathan Darter
+Anded under Leaflet-Step-1
+
