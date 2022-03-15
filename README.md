@@ -1,4 +1,4 @@
-# leaflet-challenge
+Goals - Earthquake mapping answers the question, where are the latest earthquakes located and a visual for their magnitude. Landing page displays all the earthquakes from the past 7 days. Using Leaflet the landing page displays each earthquake with a circle in which its size is based on magnitude and color based on depth. 
 
 The USGS provides earthquake data in a number of different formats, updated every 5 minutes. Visited the USGS GeoJSON Feed page and picked 'All Earthquakes from the Past 7 Days' data set
 to visualize. I used that URL of this JSON to pull in the data for the visualization.
